@@ -2,8 +2,8 @@ import scrapy
 import logging
 
 # scrapy runspider mojo_spider.py -o movies.json
-class MojoSpider(scrapy.Spider):
-    name = 'mojo'
+class MovieListSpider(scrapy.Spider):
+    name = 'movielistspider'
 
     years = range(2004, 2020)
 
