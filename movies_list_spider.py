@@ -1,6 +1,4 @@
 import scrapy
-import pandas as pd
-import os
 import logging
 
 # scrapy runspider mojo_spider.py -o movies.json
