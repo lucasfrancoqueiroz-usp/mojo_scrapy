@@ -1,4 +1,5 @@
 import scrapy
+import re
 import logging
 
 # scrapy runspider mojo_spider.py -o movies.json
@@ -31,6 +32,7 @@ class MovieListSpider(scrapy.Spider):
             rank = tds[RANK_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             release = tds[RELEASE_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             url = tds[RELEASE_INDEX].xpath("descendant-or-self::*/a/@href").extract_first()
+            release_id = re.search(r"rl\d+", url)[0]
             gross = tds[GROSS_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             max_th = tds[MAX_TH_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             opening = tds[OPENING_INDEX].xpath("descendant-or-self::*/text()").extract_first()
@@ -44,6 +46,7 @@ class MovieListSpider(scrapy.Spider):
                 "rank": rank,
                 "release": release,
                 "url": url,
+                "release_id": release_id,
                 "gross": gross,
                 "max_th": max_th,
                 "opening": opening,
