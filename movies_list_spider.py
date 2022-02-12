@@ -32,6 +32,7 @@ class MojoSpider(scrapy.Spider):
 
             rank = tds[RANK_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             release = tds[RELEASE_INDEX].xpath("descendant-or-self::*/text()").extract_first()
+            url = tds[RELEASE_INDEX].xpath("descendant-or-self::*/a/@href").extract_first()
             gross = tds[GROSS_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             max_th = tds[MAX_TH_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             opening = tds[OPENING_INDEX].xpath("descendant-or-self::*/text()").extract_first()
@@ -44,6 +45,7 @@ class MojoSpider(scrapy.Spider):
             yield {
                 "rank": rank,
                 "release": release,
+                "url": url,
                 "gross": gross,
                 "max_th": max_th,
                 "opening": opening,
