@@ -2,7 +2,7 @@ import scrapy
 import re
 import logging
 
-# scrapy runspider mojo_spider.py -o movies.json
+# scrapy runspider movies_list_spider.py -o movies.json
 class MovieListSpider(scrapy.Spider):
     name = 'movielistspider'
 
