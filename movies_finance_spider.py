@@ -10,8 +10,6 @@ class MovieFinanceSpider(scrapy.Spider):
 
     def __init__(self):
         self.start_urls = self.__get_movies_url()
-        logging.info(len(self.start_urls))
-        exit()
 
     def __get_movies_url(self):
         url_base = "https://www.boxofficemojo.com/"
