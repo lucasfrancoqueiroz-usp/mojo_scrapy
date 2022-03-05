@@ -4,6 +4,10 @@ import logging
 
 # scrapy runspider movies_list_spider.py -o movies.json
 class MovieListSpider(scrapy.Spider):
+    '''
+    Extract movies per year
+    '''
+
     name = 'movielistspider'
 
     years = range(2004, 2020)

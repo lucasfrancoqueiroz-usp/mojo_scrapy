@@ -1,3 +1,7 @@
+'''
+Select wide realease from monthly extraction
+'''
+
 import pandas as pd
 df = pd.read_json('movies.jl', lines=True)
 
@@ -12,4 +16,4 @@ df = df[wide]
 
 # Remove duplication between years
 df.sort_values(by='max_th', ascending=False, inplace=True)
-df.drop_duplicates(subset=['release', 'year'], inplace=True)
+df.drop_duplicates(subset=['release_id'], inplace=True)

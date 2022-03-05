@@ -5,6 +5,10 @@ import pandas as pd
 
 # scrapy runspider movies_list_spider.py -o movies.json
 class MovieListSpider(scrapy.Spider):
+    '''
+    Extract movies per month
+    '''
+
     name = 'movielistspider'
 
     months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october',
@@ -50,12 +54,7 @@ class MovieListSpider(scrapy.Spider):
         GROSS_INDEX = 5 # Gross in the month
         MAX_TH_INDEX = 6
         TOTAL_GROSS = 7 # full gross regardless month
-        # OPENING_INDEX = 7
         RELEASE_DATE = 8
-        # PERC_OF_TOTAL_INDEX = 8
-        # OPEN_TH_INDEX = 9
-        # OPEN_INDEX = 10
-        # CLOSE_INDEX = 11
         DISTRIBUTOR_INDEX = 9
 
         trs = response.xpath("//*[@id='table']/div/table/tr[position()>1]")
@@ -68,13 +67,8 @@ class MovieListSpider(scrapy.Spider):
             release_id = re.search(r"rl\d+", url)[0]
             gross = tds[GROSS_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             max_th = tds[MAX_TH_INDEX].xpath("descendant-or-self::*/text()").extract_first()
-            # opening = tds[OPENING_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             total_gross = tds[TOTAL_GROSS].xpath("descendant-or-self::*/text()").extract_first()
-            # perc_of_total = tds[PERC_OF_TOTAL_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             release_date = tds[RELEASE_DATE].xpath("descendant-or-self::*/text()").extract_first()
-            # open_th = tds[OPEN_TH_INDEX].xpath("descendant-or-self::*/text()").extract_first()
-            # open = tds[OPEN_INDEX].xpath("descendant-or-self::*/text()").extract_first()
-            # close = tds[CLOSE_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             distributor = tds[DISTRIBUTOR_INDEX].xpath("descendant-or-self::*/text()").extract_first()
 
             yield {
@@ -86,11 +80,6 @@ class MovieListSpider(scrapy.Spider):
                 "max_th": max_th,
                 "total_gross": total_gross,
                 "release_date": release_date,
-                # "opening": opening,
-                # "perc_of_total": perc_of_total,
-                # "open_th": open_th,
-                # "open": open,
-                # "close": close,
                 "distributor": distributor,
                 "month": month,
                 "year": year
