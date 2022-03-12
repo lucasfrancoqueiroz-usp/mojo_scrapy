@@ -1,3 +1,6 @@
+# DEPRECATED REASON
+# Wide released extracted daily is incomplete because some movies doesn't have daily information
+
 import scrapy
 import re
 import logging

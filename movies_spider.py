@@ -1,6 +1,5 @@
 import scrapy
 import re
-import logging
 import pandas as pd
 
 # scrapy runspider movies_month_list_spider.py -o movies.json
@@ -10,13 +9,14 @@ class MovieListSpider(scrapy.Spider):
     '''
 
     name = 'movielistspider'
+    movies_json = 'movies.jl'
 
     months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october',
               'november', 'december']
     years = range(2004, 2020)
 
     def _get_loaded_months(self):
-        df = pd.read_json('movies.jl', lines=True)
+        df = pd.read_json(self.movies_json, lines=True)
         if not df.empty:
             yms_loaded = df[['year', 'month']].drop_duplicates().values.tolist()
             return yms_loaded

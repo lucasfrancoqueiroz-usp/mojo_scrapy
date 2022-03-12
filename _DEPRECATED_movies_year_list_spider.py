@@ -1,3 +1,6 @@
+# DEPRECATED REASON
+# Wide released extracted yearly is incomplete, mojo truncates information
+
 import scrapy
 import re
 import logging

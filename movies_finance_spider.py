@@ -2,11 +2,18 @@ import scrapy
 import re
 import pandas as pd
 import os
-import logging
 
-# scrapy runspider movies_finance_spider.py -o moviesfinance.jl
+# scrapy runspider movies_finance_spider.py -o movies_finance.jl
 class MovieFinanceSpider(scrapy.Spider):
     name = "moviefinance"
+    movies_json = "movies_wide.jl"
+    movies_finance_json = "movies_finance.jl"
+
+    custom_settings = {
+        "DOWNLOADER_MIDDLEWARES": {
+            'scrapy.downloadermiddlewares.retry.RetryMiddleware': None  # Force quick fail
+        }
+    }
 
     def __init__(self):
         self.start_urls = self.__get_movies_url()
@@ -16,19 +23,33 @@ class MovieFinanceSpider(scrapy.Spider):
 
         # movies.jl is generating running movies_list_spider
         # scrapy runspider movies_list_spider.py -o movies.json
-        df = pd.read_json('movies.jl', lines=True)
+        df = pd.read_json(self.movies_json, lines=True)
+
+        scrapped = 0
+        not_scrapped = len(df)
 
         # Could be necessary execute more than one time to get all records
         # This happens because Mojo Box Office blocks continuous access
         # The following code prevents to get just the not loaded movies
-        if os.path.isfile("moviesfinance.jl"):
-            df_moviesfinance = pd.read_json('moviesfinance.jl', lines=True)
-            not_loaded_realeases_ids = ~df['release_id'].isin(df_moviesfinance['release_id'].values)
-            df = df[not_loaded_realeases_ids]
+        if os.path.isfile(self.movies_finance_json):
+            df_moviesfinance = pd.read_json(self.movies_finance_json, lines=True)
+            loaded_releases_ids = df_moviesfinance['release_id'].unique()
+            not_loaded_realeases_mask = ~df['release_id'].isin(loaded_releases_ids)
+            df = df[not_loaded_realeases_mask]
+            not_loaded_realeases_ids = df['release_id'].unique()
+
+            scrapped = len(loaded_releases_ids)
+            not_scrapped = len(not_loaded_realeases_ids)
+
+        self.logger.info(f"# movies scrapped: {scrapped}")
+        self.logger.info(f"# movies to be scrapped: {not_scrapped}")
 
         return (url_base + df['url']).to_list()
 
     def parse(self, response, **kwargs):
+
+        self.logger.info(f"{response.url}")
+
         MONTH_DAY_INDEX = 0
         DAY_OF_WEEK_INDEX = 1
         CONCURRANCY_RANK_INDEX = 2
