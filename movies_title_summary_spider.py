@@ -1,11 +1,33 @@
 import scrapy
+import re
+import pandas as pd
+import os
 
+# scrapy runspider movies_title_summary_spider.py -o moviessummary.json
 class MovieTitleSummarySpider(scrapy.Spider):
     name = "movietitlesummary"
+    movies_file = "movies.jl"
+    moviesfinance_file = "moviessummary.jl"
 
-    start_urls = [
-        "https://www.boxofficemojo.com//release/rl2557314561/?ref_=bo_md_table_11"
-    ]
+    def __init__(self):
+        self.start_urls = self.__get_movies_url()
+
+    def __get_movies_url(self):
+        url_base = "https://www.boxofficemojo.com/"
+
+        # movies.jl is generating running spider scripts, example:
+        # scrapy runspider movies_list_spider.py -o movies.json
+        df = pd.read_json(self.movies_file, lines=True)
+
+        # Could be necessary execute more than one time to get all records
+        # This happens because Mojo Box Office blocks continuous access
+        # The following code prevents to get just the not loaded movies
+        if os.path.isfile(self.moviesfinance_file):
+            df_moviesfinance = pd.read_json(self.moviesfinance_file, lines=True)
+            not_loaded_realeases_ids = ~df['release_id'].isin(df_moviesfinance['release_id'].values)
+            df = df[not_loaded_realeases_ids]
+
+        return (url_base + df['url']).to_list()
 
     def parse(self, response, **kwargs):
 
@@ -18,6 +40,8 @@ class MovieTitleSummarySpider(scrapy.Spider):
         GENRES_INDEX = 13
         IN_RELEASE_INDEX = 15
         WIDEST_INDEX = 17
+
+        release_id = re.search(r"rl\d+", response.url)[0]
 
         summary = response.xpath("//*[@class='a-section a-spacing-none mojo-summary-values mojo-hidden-from-mobile']/div/span")
         distribuitor = summary[DISTRIBUTOR_INDEX].xpath("./text()").get()
@@ -45,7 +69,8 @@ class MovieTitleSummarySpider(scrapy.Spider):
             'running_time': running_time,
             'genres': genres,
             'in_release': in_release,
-            'widest_release': widest_release
+            'widest_release': widest_release,
+            'release_id': release_id
         }
 
 

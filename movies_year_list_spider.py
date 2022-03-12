@@ -2,10 +2,10 @@ import scrapy
 import re
 import logging
 
-# scrapy runspider movies_list_spider.py -o movies.json
+# scrapy runspider movies_year_list_spider.py -o movies.json
 class MovieListSpider(scrapy.Spider):
     '''
-    Extract movies per year
+    Extract JUST WIDE movies per year
     '''
 
     name = 'movielistspider'

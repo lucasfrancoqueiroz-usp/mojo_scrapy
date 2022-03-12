@@ -3,7 +3,7 @@ import re
 import logging
 import pandas as pd
 
-# scrapy runspider movies_list_spider.py -o movies.json
+# scrapy runspider movies_month_list_spider.py -o movies.json
 class MovieListSpider(scrapy.Spider):
     '''
     Extract movies per month
