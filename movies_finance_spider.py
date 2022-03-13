@@ -20,9 +20,6 @@ class MovieFinanceSpider(scrapy.Spider):
 
     def __get_movies_url(self):
         url_base = "https://www.boxofficemojo.com/"
-
-        # movies.jl is generating running movies_list_spider
-        # scrapy runspider movies_list_spider.py -o movies.json
         df = pd.read_json(self.movies_json, lines=True)
 
         scrapped = 0

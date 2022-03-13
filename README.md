@@ -23,3 +23,15 @@ Look for `# movies to be scrapped` in the `movies_finance.log` file. If the
 number aside is not zero repeat the execution until the last appearance has 
 zero.
 
+###4 - Step
+####**Very similar to step 3.**
+
+Run `python run_movies_summary_spider.py` or 
+`scrapy runspider movies_summary_spider.py -o movies_summary.jl --logfile movies_summary.log`
+
+This execution will extract basic information from the movies (e.g. genre) and
+create two files: `movies_summary.jl` and `movies_summary.log`
+
+Look for `# movies to be scrapped` in the `movies_summary.log` file. If the
+number aside is not zero repeat the execution until the last appearance has 
+zero.
