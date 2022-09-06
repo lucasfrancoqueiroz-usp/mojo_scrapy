@@ -64,6 +64,7 @@ class MovieFinanceSpider(scrapy.Spider):
             tds = tr.xpath("td")
 
             month_day = tds[MONTH_DAY_INDEX].xpath("descendant-or-self::*/text()").extract_first()
+            date_url = tds[MONTH_DAY_INDEX].xpath("a/@href").extract_first()
             day_of_week = tds[DAY_OF_WEEK_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             concurrancy_rank = tds[CONCURRANCY_RANK_INDEX].xpath("descendant-or-self::*/text()").extract_first()
             daily_gross = tds[DAILY_GROSS_INDEX].xpath("descendant-or-self::*/text()").extract_first()
@@ -89,5 +90,6 @@ class MovieFinanceSpider(scrapy.Spider):
                 "per_theater_average_gross": per_theater_average_gross,
                 "gross_until_current_day": gross_until_current_day,
                 "ordinal_day": ordinal_day,
-                "release_id": release_id
+                "release_id": release_id,
+                "date_url": date_url
             }
